@@ -6,6 +6,8 @@ import swaggerUi from "swagger-ui-express";
 
 import swaggerDocument from "./docs/swagger.json" with { type: "json" };
 import { bouquetsRouter } from "./routes/bouquetsRouter.js";
+import { feedbacksRouter } from "./routes/feedbacksRouter.js";
+import { ordersRouter } from "./routes/ordersRouter.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
@@ -28,6 +30,8 @@ app.get("/", (req, res) => {
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/bouquets", bouquetsRouter);
+app.use("/api/feedbacks", feedbacksRouter);
+app.use("/api/orders", ordersRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

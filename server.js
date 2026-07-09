@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 import app from "./src/app.js";
 import { connectDatabase, sequelize } from "./src/db/sequelize.js";
+import "./src/models/Feedback.js";
+import "./src/models/Order.js";
 import "./src/models/Bouquet.js";
 
 dotenv.config();
