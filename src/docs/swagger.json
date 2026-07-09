@@ -1,11 +1,15 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Flora Bouquets API",
+    "title": "Flora API",
     "version": "1.0.0",
-    "description": "REST API for Flora bouquets collection"
+    "description": "REST API for Flora bouquets, feedbacks and orders"
   },
   "servers": [
+    {
+      "url": "https://flora-backend-jtb2.onrender.com",
+      "description": "Render production server"
+    },
     {
       "url": "http://localhost:3001",
       "description": "Local server"
@@ -15,6 +19,14 @@
     {
       "name": "Bouquets",
       "description": "Operations with bouquets"
+    },
+    {
+      "name": "Feedbacks",
+      "description": "Operations with feedbacks"
+    },
+    {
+      "name": "Orders",
+      "description": "Operations with orders"
     }
   ],
   "paths": {
@@ -101,9 +113,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Not found"
                 }
               }
             }
@@ -140,7 +149,7 @@
             }
           },
           "400": {
-            "description": "Validation error or empty request body",
+            "description": "Validation error",
             "content": {
               "application/json": {
                 "schema": {
@@ -155,9 +164,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Not found"
                 }
               }
             }
@@ -178,16 +184,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Bouquet deleted successfully"
-                    },
-                    "bouquet": {
-                      "$ref": "#/components/schemas/Bouquet"
-                    }
-                  }
+                  "$ref": "#/components/schemas/DeleteBouquetResponse"
                 }
               }
             }
@@ -198,9 +195,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Not found"
                 }
               }
             }
@@ -254,9 +248,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Not found"
                 }
               }
             }
@@ -283,8 +274,7 @@
                 "properties": {
                   "photo": {
                     "type": "string",
-                    "format": "binary",
-                    "description": "Bouquet photo file"
+                    "format": "binary"
                   }
                 }
               }
@@ -308,9 +298,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Photo file is required"
                 }
               }
             }
@@ -321,9 +308,120 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/feedbacks": {
+      "get": {
+        "summary": "Get all feedbacks",
+        "tags": ["Feedbacks"],
+        "responses": {
+          "200": {
+            "description": "List of feedbacks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Feedback"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new feedback",
+        "tags": ["Feedbacks"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Feedback created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Feedback"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/orders": {
+      "get": {
+        "summary": "Get all orders",
+        "tags": ["Orders"],
+        "responses": {
+          "200": {
+            "description": "List of orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new order",
+        "tags": ["Orders"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -359,7 +457,7 @@
           },
           "description": {
             "type": "string",
-            "example": "A delicate bouquet with pink and white spring flowers."
+            "example": "A delicate bouquet with fresh spring flowers."
           },
           "price": {
             "type": "number",
@@ -367,7 +465,7 @@
           },
           "favorite": {
             "type": "boolean",
-            "example": false
+            "example": true
           },
           "photoURL": {
             "type": "string",
@@ -376,13 +474,11 @@
           },
           "createdAt": {
             "type": "string",
-            "format": "date-time",
-            "example": "2026-07-07T10:00:00.000Z"
+            "format": "date-time"
           },
           "updatedAt": {
             "type": "string",
-            "format": "date-time",
-            "example": "2026-07-07T10:00:00.000Z"
+            "format": "date-time"
           }
         }
       },
@@ -392,19 +488,14 @@
         "properties": {
           "title": {
             "type": "string",
-            "minLength": 2,
-            "maxLength": 100,
             "example": "Spring Elegance"
           },
           "description": {
             "type": "string",
-            "minLength": 5,
-            "maxLength": 1000,
-            "example": "A delicate bouquet with pink and white spring flowers."
+            "example": "A delicate bouquet with fresh spring flowers."
           },
           "price": {
             "type": "number",
-            "minimum": 0,
             "example": 35
           },
           "favorite": {
@@ -424,19 +515,14 @@
         "properties": {
           "title": {
             "type": "string",
-            "minLength": 2,
-            "maxLength": 100,
             "example": "Updated Bouquet"
           },
           "description": {
             "type": "string",
-            "minLength": 5,
-            "maxLength": 1000,
             "example": "Updated bouquet description."
           },
           "price": {
             "type": "number",
-            "minimum": 0,
             "example": 45
           },
           "favorite": {
@@ -457,6 +543,143 @@
           "favorite": {
             "type": "boolean",
             "example": true
+          }
+        }
+      },
+      "DeleteBouquetResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Bouquet deleted successfully"
+          },
+          "bouquet": {
+            "$ref": "#/components/schemas/Bouquet"
+          }
+        }
+      },
+      "Feedback": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "text": {
+            "type": "string",
+            "example": "Flora made my anniversary unforgettable with their beautiful arrangement!"
+          },
+          "author": {
+            "type": "string",
+            "example": "Emma T."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FeedbackCreate": {
+        "type": "object",
+        "required": ["text", "author"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "example": "Amazing flowers and fast delivery!"
+          },
+          "author": {
+            "type": "string",
+            "example": "Anna K."
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "productId": {
+            "type": "integer",
+            "example": 1
+          },
+          "productTitle": {
+            "type": "string",
+            "example": "Spring Elegance"
+          },
+          "quantity": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Test User"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+15551234567"
+          },
+          "address": {
+            "type": "string",
+            "example": "456 Floral Ave, Sydney NSW 2000 AU"
+          },
+          "message": {
+            "type": "string",
+            "example": "Please deliver in the morning."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrderCreate": {
+        "type": "object",
+        "required": [
+          "productId",
+          "productTitle",
+          "quantity",
+          "name",
+          "phone",
+          "address"
+        ],
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "example": 1
+          },
+          "productTitle": {
+            "type": "string",
+            "example": "Spring Elegance"
+          },
+          "quantity": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Test User"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+15551234567"
+          },
+          "address": {
+            "type": "string",
+            "example": "456 Floral Ave, Sydney NSW 2000 AU"
+          },
+          "message": {
+            "type": "string",
+            "example": "Test order from Swagger"
           }
         }
       },
